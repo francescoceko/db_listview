@@ -1,4 +1,5 @@
-import 'package:db_listview/database/tables/Item.dart';
+import 'package:db_listview/database/bo/Item.dart';
+import 'package:db_listview/database/dao/ItemDao.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -21,12 +22,9 @@ class _MyHomePageState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final itemNumController = TextEditingController();
-    final items = List<Item>.generate(
-      10,
-      (i) => Item("$i", "1", "800012345$i", "Item $i"),
-    );
 
-    void _changed(String text) {
+
+    void _searchChanged(String text) {
       debugPrint(text);
     }
 
@@ -56,7 +54,7 @@ class _MyHomePageState extends StatelessWidget {
           children: <Widget>[
             TextField(
               maxLength: 50,
-              onChanged: _changed,
+              onChanged: _searchChanged,
               onSubmitted: _submitted,
               keyboardType: TextInputType.number,
               controller: itemNumController,
@@ -65,70 +63,57 @@ class _MyHomePageState extends StatelessWidget {
                   contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10)),
             ),
             new Flexible(
-              child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  return GestureDetector(
-                    onTap: () {
-                      _navigateToItemDetails(context, item);
+              child: FutureBuilder <List<Item>>(
+                future: ItemDao.queryAllRows(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+                  return ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      final item = snapshot.data[index];
+                      return GestureDetector(
+                        onTap: () {
+                          _navigateToItemDetails(context, item);
+                        },
+                       child: Row(
+
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Text(
+                                  "${item.itemDesc}" ,
+                                  style: Theme.of(context).textTheme.headline,
+                                ),
+                                Text(
+                                  "${item.itemId} - ${item.barcode}" ,
+                                  style: Theme.of(context).textTheme.subtitle,
+                                ),
+                              ],
+
+                            ),
+                          ),
+                          Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(
+                                textAlign: TextAlign.center,
+                              decoration: InputDecoration(
+                              hintText: '0',
+                                hintMaxLines: 1
+                              )
+                                ),
+                            ),
+                            ),
+                        ],
+                      )
+                      );
                     },
-                   child: Row(
-
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(
-                        flex: 5,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: <Widget>[
-                            Text(
-                              "${item.itemDesc}" ,
-                              style: Theme.of(context).textTheme.headline,
-                            ),
-                            Text(
-                              "${item.itemId} - ${item.barcode}" ,
-                              style: Theme.of(context).textTheme.subtitle,
-                            ),
-                          ],
-
-                        ),
-                      ),
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            textAlign: TextAlign.center,
-                          decoration: InputDecoration(
-                          hintText: '0',
-                            hintMaxLines: 1
-                          )
-                            ),
-                        ),
-                        ),
-                    ],
-                  )
                   );
-
-//                    Row(
-//                      children: <Widget>[
-//                        ListTile(
-//                          title: Text(
-//                            item.itemDesc,
-//                            style: Theme.of(context).textTheme.headline,
-//                          )
-//                      ]
-//                  );
-//                    ListTile(
-//                    title: Text(
-//                      item.itemDesc,
-//                      style: Theme.of(context).textTheme.headline,
-//                    ),
-//                    onTap: () {
-//                      _navigateToItemDetails(context, item);
-//                    },
-//                  );
-                },
+                }
               ),
             ),
           ],

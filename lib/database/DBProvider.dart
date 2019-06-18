@@ -23,7 +23,7 @@ import 'package:path_provider/path_provider.dart';
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "ItemTestDB.db");
+    String path = join(documentsDirectory.path, "ItemTestDB2.db");
     return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
           await db.execute("CREATE TABLE ITEM ("
@@ -33,7 +33,23 @@ import 'package:path_provider/path_provider.dart';
               "ItemDesc TEXT,"
               "PRIMARY KEY (ItemId, ItemVariant)"
               ")");
-          insertItems(50);
+
+          await db.execute("CREATE TABLE ORDER_HEADER("
+              "DocId TEXT ,"
+              "DocType TEXT,"
+              "DocDate TEXT,"
+              "DocStatus TEXT,"
+              "PRIMARY KEY (DocId)"
+              ")");
+
+          await db.execute("CREATE TABLE ORDER_ROW("
+              "RowDocId TEXT ,"
+              "HeaderDocId TEXT,"
+              "RowDate TEXT,"
+              "Quantity REAL,"
+              "PRIMARY KEY (RowDocId)"
+              ")");
+          insertItems(100);
         });
   }
 
@@ -41,7 +57,7 @@ import 'package:path_provider/path_provider.dart';
     String qry =
         "INSERT OR REPLACE INTO ITEM (ItemId, ItemVariant, Barcode, ItemDesc) VALUES ";
     for (var i = 0; i < num; i++) {
-      qry += "('$i','1','800123456$i', 'Item $i'),";
+      qry += "('IT00$i','1','800123456$i', 'Desc item $i'),";
     }
     qry = qry.substring(0, qry.length - 1);
     debugPrint("QUERY: $qry");
