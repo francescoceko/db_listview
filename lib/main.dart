@@ -23,7 +23,6 @@ class _MyHomePageState extends StatelessWidget {
   Widget build(BuildContext context) {
     final itemNumController = TextEditingController();
 
-
     void _searchChanged(String text) {
       debugPrint(text);
     }
@@ -39,9 +38,9 @@ class _MyHomePageState extends StatelessWidget {
       Navigator.of(ctx).push(MaterialPageRoute(builder: (BuildContext context){
         return Scaffold(
           appBar: AppBar(
-            title: Text("Details"),
+            title: Text(item.itemId),
           ),
-          body: Text("Pippo ${item.itemDesc}", ),
+          body: Text("Details of Item ${item.itemDesc}", ),
         );
       }));
     }
@@ -56,7 +55,6 @@ class _MyHomePageState extends StatelessWidget {
               maxLength: 50,
               onChanged: _searchChanged,
               onSubmitted: _submitted,
-              keyboardType: TextInputType.number,
               controller: itemNumController,
               decoration: InputDecoration(
                   hintText: 'Please enter a search term',
@@ -76,7 +74,6 @@ class _MyHomePageState extends StatelessWidget {
                           _navigateToItemDetails(context, item);
                         },
                        child: Row(
-
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Expanded(
@@ -100,6 +97,7 @@ class _MyHomePageState extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: TextField(
+                                  keyboardType: TextInputType.number,
                                 textAlign: TextAlign.center,
                               decoration: InputDecoration(
                               hintText: '0',
@@ -121,33 +119,4 @@ class _MyHomePageState extends StatelessWidget {
   }
 }
 
-class ItemListTile extends StatefulWidget {
-  final Item item;
-  @override
-  createState() => _ItemListTileState();
 
-  ItemListTile(this.item);
-}
-
-class _ItemListTileState extends State<ItemListTile>{
-  var color = Colors.pink;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: ListTile(
-      title: Text(
-        widget.item.itemDesc,
-        style: Theme.of(context).textTheme.headline,
-      ),
-      onTap: () {
-        //_navigateToItemDetails(context, widget.item);
-        setState(() {
-          color = Colors.amber;
-        });
-      },
-    ),
-    color: color,
-    );
-  }
-}
