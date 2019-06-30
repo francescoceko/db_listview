@@ -30,9 +30,9 @@ class _MyHomePageState extends State<FilteredListWidget>{
 
   @override
   Widget build(BuildContext context) {
-    final itemNumController = TextEditingController();
+    //final itemNumController = TextEditingController();
     //final itemNumController = TextEditingController(text: filterText);
-    //final itemNumController = TextEditingController.fromValue(new TextEditingValue(text: filterText,selection: new TextSelection.collapsed(offset: filterText.length)));
+    final itemNumController = TextEditingController.fromValue(new TextEditingValue(text: filterText,selection: new TextSelection.collapsed(offset: filterText.length)));
 
 
     void _searchChanged(String text) {
@@ -100,8 +100,12 @@ class _MyHomePageState extends State<FilteredListWidget>{
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: <Widget>[
                                       Text(
-                                        "${item.itemDesc}" ,
+                                        "${item.itemDesc} cia66" ,
                                         style: Theme.of(context).textTheme.headline,
+                                      ),
+                                      Text(
+                                        "${item.itemId} - ${item.barcode}" ,
+                                        style: Theme.of(context).textTheme.subtitle,
                                       ),
                                       Text(
                                         "${item.itemId} - ${item.barcode}" ,
@@ -114,14 +118,17 @@ class _MyHomePageState extends State<FilteredListWidget>{
                                 Flexible(
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: TextField(
-                                        keyboardType: TextInputType.number,
-                                        textAlign: TextAlign.center,
-                                        decoration: InputDecoration(
-                                            hintText: '0',
-                                            hintMaxLines: 1
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextField(
+                                          keyboardType: TextInputType.number,
+                                          textAlign: TextAlign.center,
+                                          decoration: InputDecoration(
+                                              hintText: '0',
+                                              hintMaxLines: 1
 
-                                        )
+                                          )
+                                      ),
                                     ),
                                   ),
                                 ),
