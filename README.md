@@ -4,6 +4,6 @@ Simple List from db
 
 ## Getting Started
 
-Example of base app to view a list of items from loaded from db
+Relized an app to test a connection with a database on flutter
 
 
